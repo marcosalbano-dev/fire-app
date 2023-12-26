@@ -13,7 +13,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
 
 function App() {
   const [titulo, setitulo] = useState("");
@@ -45,6 +45,24 @@ function App() {
     }
     loadPosts();
   }, []);
+
+  useEffect(() => {
+    async function checkLogin(){
+      onAuthStateChanged(auth, (user) => {
+        if(user){
+          setUser(true)
+          setUserDetail({
+            uid: user.uid,
+            email: user.email
+          })
+          
+        } else {
+          setUser(false)
+          setUserDetail({})
+        }
+      })
+    }
+  }, [])
 
   async function handleAdd() {
     // await setDoc(doc(db, "posts", "12345"), {
@@ -150,6 +168,12 @@ function App() {
     })
   }
 
+  async function fazerLogout(id){
+    await signOut(auth)
+    setUser(false)
+    setUserDetail({})
+  }
+
   async function logarUsuario(){
     await signInWithEmailAndPassword(auth, email, senha)
     .then((value) => {
@@ -176,7 +200,9 @@ function App() {
 
       { user && (
         <div>
-          <strong>Seja bemvindo(a)! Você está logado!</strong>
+          <strong>Seja bemvindo(a)! Você está logado!</strong> <br/>
+          <span>ID: {userDetail.uid} - EMAIL: {userDetail.email}</span><br/>
+          <button onClick={fazerLogout}>Sair da conta</button><br/>
         </div>
       )}
 
