@@ -62,6 +62,7 @@ function App() {
         }
       })
     }
+    checkLogin();
   }, [])
 
   async function handleAdd() {
