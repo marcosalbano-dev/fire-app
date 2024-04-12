@@ -1,6 +1,7 @@
 ﻿import { useState } from "react"
 import './home.css'
 import { Link } from "react-router-dom";
+import { auth } from '../../firebaseConnection'
 
 export default function Home(){
 
